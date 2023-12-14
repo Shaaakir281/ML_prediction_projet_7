@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-from main import app
+from ML_prediction_projet_7.predict.main import app
 import unittest
 
 class FlaskApiTest(unittest.TestCase):
