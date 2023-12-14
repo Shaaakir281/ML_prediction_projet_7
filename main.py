@@ -11,11 +11,18 @@ model = mlflow.pyfunc.load_model("./artifacts/model_artifact/model.pkl")
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Extraction des données de la requête
-        data = request.get_json()
+        # Extraction des données de la requête en JSON
+        json_data = request.get_json()
+
+        # Convertir les données JSON en DataFrame pandas
+        if isinstance(json_data, dict):  # Vérifier si les données sont un dictionnaire
+            data = pd.DataFrame([json_data])
+        else:  # Supposer que les données sont une liste de dictionnaires
+            data = pd.DataFrame(json_data)
+
         # Prédiction
         predictions = model.predict(data)
-        return jsonify(predictions)
+        return jsonify(predictions.tolist())  # Convertir les prédictions en liste pour la réponse JSON
     except Exception as e:
         return jsonify({"error": str(e)})
 
