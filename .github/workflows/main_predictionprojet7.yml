@@ -29,8 +29,11 @@ jobs:
       
       - name: Install dependencies
         run: pip install -r requirements.txt
-        
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+
+      - name: Run unit tests
+        run: |
+          source venv/bin/activate
+          python -m unittest discover
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -47,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: 'production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     
     steps:
@@ -58,12 +61,11 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-
       
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: 'PredictionProjet7'
-          slot-name: 'Production'
+          slot-name: 'production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C41F086FE7274E949D0077FFBCDC3DC1 }}
