@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import mlflow.pyfunc
+import pandas as pd
 
 # Initialisation de l'application Flask
 app = Flask(__name__)
