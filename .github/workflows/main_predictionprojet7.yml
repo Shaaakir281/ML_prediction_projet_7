@@ -47,7 +47,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'PredictionProjet7'  # Assurez-vous que c'est le bon nom d'app Azure
+          app-name: 'prediction-projet-7'
           images: 'shaaakir281/prediction_projet7:latest'
 
         
