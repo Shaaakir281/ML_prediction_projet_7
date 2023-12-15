@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: dockerfile
+        file: Dockerfile
         push: true
         tags: shaaakir281/prediction_projet7:latest
 
@@ -51,6 +51,6 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
-          docker build -t prediction_projet7 -f dockerfile .
+          docker build -t prediction_projet7 .
           docker tag prediction_projet7:latest 656647707554.dkr.ecr.us-east-1.amazonaws.com/prediction_projet7:latest
           docker push 656647707554.dkr.ecr.us-east-1.amazonaws.com/prediction_projet7:latest
