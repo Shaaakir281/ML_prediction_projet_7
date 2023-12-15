@@ -30,7 +30,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: /ML_prediction_projet_7/dockerfile
+        file: dockerfile
         push: true
         tags: Shaaakir281/prediction_projet7:latest
   deploy:
@@ -46,4 +46,4 @@ jobs:
         uses: azure/webapps-container-deploy@v1
         with:
           app-name: 'PredictionProjet7'
-          images: 'Shaaakir281/prediction_projet7:latest'
+          images: 'shaaakir281/prediction_projet7:latest'
