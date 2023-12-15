@@ -19,8 +19,10 @@ def predict():
         # Convertir les données JSON en DataFrame pandas
         if isinstance(json_data, dict):  # Vérifier si les données sont un dictionnaire
             data = pd.DataFrame([json_data])
-        else:  # Supposer que les données sont une liste de dictionnaires
+        elif isinstance(json_data, list):
             data = pd.DataFrame(json_data)
+        else:
+            data = pd.read_json(json_data, orient='records')
 
         # Prédiction
         predictions = model.predict(data)
