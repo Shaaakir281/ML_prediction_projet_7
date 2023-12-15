@@ -44,19 +44,17 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: <your-aws-region>
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image to Amazon ECR
         run: |
-          docker build -t prediction_projet7 .
+          docker build -t prediction_projet7 -f Dockerfile .
           docker tag prediction_projet7:latest 656647707554.dkr.ecr.us-east-1.amazonaws.com/prediction_projet7:latest
           docker push 656647707554.dkr.ecr.us-east-1.amazonaws.com/prediction_projet7:latest
 
       - name: Deploy Docker image to AWS ECS
-        # Utilisez une action personnalisée ou un script pour mettre à jour le service ECS avec la nouvelle image Docker
-        # Par exemple, vous pouvez utiliser la CLI AWS pour mettre à jour le service ECS ou exécuter un script personnalisé.
         run: |
-          # Ajoutez ici les commandes pour mettre à jour votre service ECS avec la nouvelle image Docker
+           aws ecs update-service --cluster Prediction-Projet-7 --service Prediction-projet-7-service --force-new-deployment
