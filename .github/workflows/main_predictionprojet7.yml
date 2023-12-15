@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - PredictionProjet7
+name: Build and deploy Python app to AWS ECS
 
 on:
   push:
@@ -26,26 +26,37 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-    - name: Build and Push Docker image
+    - name: Build and Push Docker image to Docker Hub
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: dockerfile
+        file: Dockerfile
         push: true
         tags: shaaakir281/prediction_projet7:latest
-  deploy:
+
+  deploy-to-aws:
     runs-on: ubuntu-latest
-    needs: build-and-push  # Assurez-vous que cela correspond au nom de votre job de construction et de push
+    needs: build-and-push  # This ensures that the deploy job starts after the build-and-push job completes
     
     steps:
-      - name: Log in to Azure CLI
-        uses: azure/login@v1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'PredictionProjet7'
-          images: 'shaaakir281/prediction_projet7:latest'
-        
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          docker build -t prediction_projet7 .
+          docker tag prediction_projet7:latest 656647707554.dkr.ecr.us-east-1.amazonaws.com/prediction_projet7:latest
+          docker push 656647707554.dkr.ecr.us-east-1.amazonaws.com/prediction_projet7:latest
+
+      - name: Deploy Docker image to AWS ECS
+        # Utilisez une action personnalisée ou un script pour mettre à jour le service ECS avec la nouvelle image Docker
+        # Par exemple, vous pouvez utiliser la CLI AWS pour mettre à jour le service ECS ou exécuter un script personnalisé.
+        run: |
+          # Ajoutez ici les commandes pour mettre à jour votre service ECS avec la nouvelle image Docker
