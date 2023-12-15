@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 import mlflow.pyfunc
 import pandas as pd
@@ -6,7 +7,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Chargement du modèle
-model = mlflow.pyfunc.load_model("../artifacts/model_artifact")
+model = mlflow.pyfunc.load_model("/ML_prediction_projet_7/artifacts/model_artifact")
 
 # Route pour les prédictions
 @app.route('/predict', methods=['POST'])
@@ -33,5 +34,7 @@ def health_check():
     return "API is up and running"
 
 # Démarrage de l'application
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
