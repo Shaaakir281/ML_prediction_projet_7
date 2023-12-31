@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-from ML_prediction_projet_7.predict.main import app
+from predict.main import app
 import unittest
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
