@@ -7,7 +7,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Chargement du modèle
-model = mlflow.pyfunc.load_model("/ML_prediction_projet_7/artifacts/model_artifact")
+model = mlflow.pyfunc.load_model("/ML_prediction_projet_7/model_with_threshold")
 
 # Route pour les prédictions
 @app.route('/predict', methods=['POST'])

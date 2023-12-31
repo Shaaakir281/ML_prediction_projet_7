@@ -1,5 +1,5 @@
 # Utiliser une image de base Python
-FROM python:3.10-slim
+FROM python:3.9.18
 
 # Mettre à jour et installer les dépendances nécessaires
 RUN apt-get update && apt-get install -y \
