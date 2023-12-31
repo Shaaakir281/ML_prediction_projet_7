@@ -6,8 +6,13 @@ import pandas as pd
 # Initialisation de l'application Flask
 app = Flask(__name__)
 
-# Utiliser la variable d'environnement pour le chemin du modèle
-model_path = os.getenv("MODEL_PATH", os.path.join(os.path.dirname(__file__), "model_with_threshold"))
+# Chemin relatif au dossier contenant le modèle MLflow
+relative_model_path = "model_with_threshold"
+
+# Utiliser la variable d'environnement, si elle est définie, sinon utiliser le chemin relatif
+model_path = os.getenv("MODEL_PATH", os.path.join(os.path.dirname(__file__), relative_model_path))
+
+# Charger le modèle
 model = mlflow.pyfunc.load_model(model_path)
 
 # Route pour les prédictions
