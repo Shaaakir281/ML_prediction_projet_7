@@ -9,8 +9,6 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    env:
-        MODEL_PATH: './model_with_threshold/python_model.pkl'
       
     steps:
     - uses: actions/checkout@v4
