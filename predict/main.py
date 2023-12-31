@@ -9,11 +9,10 @@ app = Flask(__name__)
 # Chemin relatif au dossier contenant le modèle MLflow
 relative_model_path = "model_with_threshold"
 
-# Utiliser la variable d'environnement, si elle est définie, sinon utiliser le chemin relatif
-model_path = os.getenv("MODEL_PATH", os.path.join(os.path.dirname(__file__), relative_model_path))
+
 
 # Charger le modèle
-model = mlflow.pyfunc.load_model(model_path)
+model = mlflow.pyfunc.load_model(relative_model_path)
 
 # Route pour les prédictions
 @app.route('/predict', methods=['POST'])
