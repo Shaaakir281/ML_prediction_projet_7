@@ -20,8 +20,8 @@ class FlaskApiTest(unittest.TestCase):
     # Test de la route de prédiction
     def test_predict(self):
         # Charger des données de test à partir d'un fichier CSV
-        test_data = pd.read_csv('https://github.com/Shaaakir281/ML_prediction_projet_7/blob/main/tests/X_test.csv')
-        y_true = pd.read_csv('https://github.com/Shaaakir281/ML_prediction_projet_7/blob/main/tests/y_test.csv')
+        test_data = pd.read_csv('https://raw.githubusercontent.com/Shaaakir281/ML_prediction_projet_7/main/tests/X_test.csv')
+        y_true = pd.read_csv('https://raw.githubusercontent.com/Shaaakir281/ML_prediction_projet_7/main/tests/y_test.csv')
         # Convertir le DataFrame en JSON
         json_data = test_data.to_json(orient='records')
 
