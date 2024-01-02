@@ -18,18 +18,16 @@ class FlaskApiTest(unittest.TestCase):
         response = self.app.post('/predict_class', data=json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         response_data = response.json
-        # Vérifiez que la réponse est une liste (comme attendu)
         self.assertTrue(isinstance(response_data, list))
-
+    
     def test_predict_proba_shap(self):
-        # Envoyer une requête pour tester les probabilités et valeurs SHAP
         json_data = self.test_data.sample(1, random_state=42).to_json(orient='records')
         response = self.app.post('/predict_proba_shap', data=json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        response_json = response.json
-        self.assertIn('probabilities', response_json)
-        self.assertIn('shap_values', response_json)
-        self.assertIn('base_value', response_json)
+        response_data = response.json
+        self.assertIn('probabilities', response_data)
+        self.assertIn('shap_values', response_data)
+        self.assertIn('base_value', response_data)
 
     def test_health(self):
         # Tester la route de vérification de l'état de santé

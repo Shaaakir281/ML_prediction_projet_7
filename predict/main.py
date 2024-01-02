@@ -34,7 +34,13 @@ def predict_proba_shap():
         data = pd.DataFrame(json_data)
         predicted_proba = model_sans_threshold.predict_proba(data)[:, 1]
         shap_values = explainer.shap_values(data)
-        shap_values_json = [shap_array.tolist() for shap_array in shap_values] if isinstance(shap_values, list) else shap_values.tolist()
+
+        # Si shap_values est un ndarray, convertissez-le en liste
+        if isinstance(shap_values, np.ndarray):
+            shap_values_json = shap_values.tolist()
+        else:
+            # Gérer d'autres formats de shap_values si nécessaire
+            shap_values_json = shap_values
 
         response = {
             "probabilities": predicted_proba.tolist(),
@@ -44,6 +50,7 @@ def predict_proba_shap():
         return jsonify(response)
     except Exception as e:
         return jsonify({"error": str(e)})
+
 
 @app.route('/health', methods=['GET'])
 def health_check():
