@@ -5,39 +5,40 @@ import mlflow.sklearn
 import pandas as pd
 import shap
 
-# Initialisation de l'application Flask
 app = Flask(__name__)
-# Chemin relatif au dossier contenant le modèle MLflow
-relative_model_path = "model_with_threshold"
-# Charger le modèle
 
+# Chemin relatif au modèle MLflow
+relative_model_path = "model_with_threshold"
+
+# Chargement des modèles
 model = mlflow.pyfunc.load_model(relative_model_path)
 model_sans_threshold = mlflow.sklearn.load_model("artifacts/model_artifact")
 
-# Charger l'explicateur SHAP (assurez-vous que le modèle est compatible avec SHAP)
+# Chargement de l'explainer SHAP
 explainer = shap.TreeExplainer(model_sans_threshold)
 
-@app.route('/predict', methods=['POST'])
-def predict():
+@app.route('/predict_class', methods=['POST'])
+def predict_class():
     try:
         json_data = request.get_json()
         data = pd.DataFrame(json_data)
-
-        # Prédiction et probabilités
         predictions = model.predict(data)
+        return jsonify(predictions.tolist())
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+@app.route('/predict_proba_shap', methods=['POST'])
+def predict_proba_shap():
+    try:
+        json_data = request.get_json()
+        data = pd.DataFrame(json_data)
         predicted_proba = model_sans_threshold.predict_proba(data)[:, 1]
-
-        # Calcul des valeurs SHAP pour les données reçues
         shap_values = explainer.shap_values(data)
-
-        # Convertir les valeurs SHAP en format sérialisable JSON
         shap_values_json = [shap_array.tolist() for shap_array in shap_values]
-
-        # Construire la réponse JSON
         response = {
-            "predictions": predictions.tolist(),
             "probabilities": predicted_proba.tolist(),
-            "shap_values": shap_values_json
+            "shap_values": shap_values_json,
+            "base_value": explainer.expected_value.tolist()
         }
         return jsonify(response)
     except Exception as e:
