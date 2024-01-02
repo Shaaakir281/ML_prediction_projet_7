@@ -30,7 +30,7 @@ def predict():
 
         # Prédiction et probabilités
         predictions = model.predict(data)
-        predicted_proba = model.predict_proba(data)[:,1]  # Pour la classe 1
+        predicted_proba = model_sans_threshold.predict_proba(data)[:, 1]
 
         # Calcul des valeurs SHAP pour les données reçues
         shap_values = explainer.shap_values(data)
