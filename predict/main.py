@@ -34,7 +34,8 @@ def predict_proba_shap():
         data = pd.DataFrame(json_data)
         predicted_proba = model_sans_threshold.predict_proba(data)[:, 1]
         shap_values = explainer.shap_values(data)
-        shap_values_json = [shap_array.tolist() for shap_array in shap_values]
+        shap_values_json = [shap_array.tolist() for shap_array in shap_values] if isinstance(shap_values, list) else shap_values.tolist()
+
         response = {
             "probabilities": predicted_proba.tolist(),
             "shap_values": shap_values_json,

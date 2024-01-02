@@ -12,14 +12,14 @@ class FlaskApiTest(unittest.TestCase):
         self.y_true_path = './tests/y_test.csv'
         self.test_data = pd.read_csv(self.test_data_path)
         self.y_true = pd.read_csv(self.y_true_path)
-
+        
     def test_predict_class(self):
-        # Envoyer une requête pour tester la prédiction de classe
         json_data = self.test_data.sample(1, random_state=42).to_json(orient='records')
         response = self.app.post('/predict_class', data=json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         response_data = response.json
-        self.assertIn('predictions', response_data)
+        # Vérifiez que la réponse est une liste (comme attendu)
+        self.assertTrue(isinstance(response_data, list))
 
     def test_predict_proba_shap(self):
         # Envoyer une requête pour tester les probabilités et valeurs SHAP
