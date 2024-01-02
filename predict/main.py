@@ -2,6 +2,7 @@ import os
 from flask import Flask, request, jsonify
 import mlflow.pyfunc
 import pandas as pd
+import shap
 
 # Initialisation de l'application Flask
 app = Flask(__name__)
@@ -9,39 +10,44 @@ app = Flask(__name__)
 # Chemin relatif au dossier contenant le modèle MLflow
 relative_model_path = "model_with_threshold"
 
-
-
 # Charger le modèle
 model = mlflow.pyfunc.load_model(relative_model_path)
 
-# Route pour les prédictions
+# Charger l'explicateur SHAP (assurez-vous que le modèle est compatible avec SHAP)
+explainer = shap.TreeExplainer(model)
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Extraction des données de la requête en JSON
         json_data = request.get_json()
-
-        # Convertir les données JSON en DataFrame pandas
-        if isinstance(json_data, dict):  # Vérifier si les données sont un dictionnaire
+        if isinstance(json_data, dict):
             data = pd.DataFrame([json_data])
         elif isinstance(json_data, list):
             data = pd.DataFrame(json_data)
         else:
             data = pd.read_json(json_data, orient='records')
 
-        # Prédiction
+        # Prédiction et probabilités
         predictions = model.predict(data)
-        return jsonify(predictions.tolist())  # Convertir les prédictions en liste pour la réponse JSON
+        predicted_proba = model.predict_proba(data)[:,1]  # Pour la classe 1
+
+        # Calcul des valeurs SHAP pour les données reçues
+        shap_values = explainer.shap_values(data)
+
+        # Construire la réponse JSON
+        response = {
+            "predictions": predictions.tolist(),
+            "probabilities": predicted_proba.tolist(),
+            "shap_values": shap_values.tolist()
+        }
+        return jsonify(response)
     except Exception as e:
-        # Gérer l'exception et renvoyer un message d'erreur
         return jsonify({"error": str(e)})
 
-# Route de vérification de l'état
 @app.route('/health', methods=['GET'])
 def health_check():
     return "API is up and running"
 
-# Démarrage de l'application
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
