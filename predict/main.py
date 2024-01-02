@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 import mlflow.pyfunc
+import mlflow.sklearn
 import pandas as pd
 import shap
 
@@ -11,7 +12,8 @@ relative_model_path = "model_with_threshold"
 # Charger le modèle
 
 model = mlflow.pyfunc.load_model(relative_model_path)
-model_sans_threshold = mlflow.pyfunc.load_model("artifacts/model_artifact")
+model_sans_threshold = mlflow.sklearn.load_model("artifacts/model_artifact")
+
 # Charger l'explicateur SHAP (assurez-vous que le modèle est compatible avec SHAP)
 explainer = shap.TreeExplainer(model_sans_threshold)
 
