@@ -9,8 +9,9 @@ app = Flask(__name__)
 # Chemin relatif au dossier contenant le modèle MLflow
 relative_model_path = "model_with_threshold"
 # Charger le modèle
+
 model = mlflow.pyfunc.load_model(relative_model_path)
-model_sans_threshold = mlflow.pyfunc.load_model("artifacts\model_artifact")
+model_sans_threshold = mlflow.pyfunc.load_model("artifacts")
 # Charger l'explicateur SHAP (assurez-vous que le modèle est compatible avec SHAP)
 explainer = shap.TreeExplainer(model_sans_threshold)
 
