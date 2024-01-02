@@ -6,15 +6,13 @@ import shap
 
 # Initialisation de l'application Flask
 app = Flask(__name__)
-
 # Chemin relatif au dossier contenant le modèle MLflow
 relative_model_path = "model_with_threshold"
-
 # Charger le modèle
 model = mlflow.pyfunc.load_model(relative_model_path)
-
+model_sans_threshold = mlflow.pyfunc.load_model('6dcae1def9fc4634b000c7fa947a0b16')
 # Charger l'explicateur SHAP (assurez-vous que le modèle est compatible avec SHAP)
-explainer = shap.TreeExplainer(model)
+explainer = shap.TreeExplainer(model_sans_threshold)
 
 @app.route('/predict', methods=['POST'])
 def predict():
