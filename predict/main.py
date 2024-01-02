@@ -21,12 +21,7 @@ explainer = shap.TreeExplainer(model_sans_threshold)
 def predict():
     try:
         json_data = request.get_json()
-        if isinstance(json_data, dict):
-            data = pd.DataFrame([json_data])
-        elif isinstance(json_data, list):
-            data = pd.DataFrame(json_data)
-        else:
-            data = pd.read_json(json_data, orient='records')
+        data = pd.DataFrame(json_data)
 
         # Prédiction et probabilités
         predictions = model.predict(data)
@@ -35,11 +30,14 @@ def predict():
         # Calcul des valeurs SHAP pour les données reçues
         shap_values = explainer.shap_values(data)
 
+        # Convertir les valeurs SHAP en format sérialisable JSON
+        shap_values_json = [shap_array.tolist() for shap_array in shap_values]
+
         # Construire la réponse JSON
         response = {
             "predictions": predictions.tolist(),
             "probabilities": predicted_proba.tolist(),
-            "shap_values": shap_values
+            "shap_values": shap_values_json
         }
         return jsonify(response)
     except Exception as e:
