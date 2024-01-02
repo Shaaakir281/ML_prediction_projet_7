@@ -39,7 +39,7 @@ def predict():
         response = {
             "predictions": predictions.tolist(),
             "probabilities": predicted_proba.tolist(),
-            "shap_values": shap_values.tolist()
+            "shap_values": shap_values
         }
         return jsonify(response)
     except Exception as e:
