@@ -16,14 +16,14 @@ class FlaskApiTest(unittest.TestCase):
         json_data = self.test_data.sample(1, random_state=42).to_json(orient='records')
         response = self.app.post('/predict_class', data=json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        response_data = json.loads(response.data.decode())
+        response_data = response.get_json()
         self.assertIn('predictions', response_data)
     
     def test_predict_proba_shap(self):
         json_data = self.test_data.sample(1, random_state=42).to_json(orient='records')
         response = self.app.post('/predict_proba_shap', data=json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        response_data = json.loads(response.data.decode())
+        response_data = response.get_json()
         self.assertIn('probabilities', response_data)
         self.assertIn('shap_values', response_data)
         self.assertIn('base_value', response_data)
