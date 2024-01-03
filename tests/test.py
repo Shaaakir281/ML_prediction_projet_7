@@ -28,14 +28,16 @@ class FlaskApiTest(unittest.TestCase):
         json_data = self.test_data.sample(500, random_state=42).to_json(orient='records')
         response = self.app.post('/predict_class', data=json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        response_data = response.get_json
-        # Vérification et calcul des métriques
+
+        response_data = response.get_json()
+        print("Réponse complète de l'API:", response_data)
+
         if 'predictions' in response_data:
             y_pred = response_data['predictions']
             print_metrics(self.y_true, y_pred)
         else:
             self.fail("Réponse de l'API ne contient pas de 'predictions'")
-    
+
     def test_predict_proba_shap(self):
         json_data = self.test_data.sample(1, random_state=42).to_json(orient='records')
         response = self.app.post('/predict_proba_shap', data=json_data, content_type='application/json')
