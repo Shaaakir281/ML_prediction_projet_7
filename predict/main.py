@@ -36,12 +36,14 @@ def predict_proba_shap():
         predicted_proba = model_sans_threshold.predict_proba(data)[:, 1]
         shap_values = explainer.shap_values(data)
 
-        # Si shap_values est un ndarray, convertissez-le en liste
-        if isinstance(shap_values, np.ndarray):
-            shap_values_json = shap_values.tolist()
-        else:
-            # Gérer d'autres formats de shap_values si nécessaire
-            shap_values_json = shap_values
+        # Debug: Affichez les valeurs SHAP avant la conversion
+        print("Valeurs SHAP avant conversion:", shap_values)
+
+        # Conversion des valeurs SHAP
+        shap_values_json = shap_values.tolist() if isinstance(shap_values, np.ndarray) else shap_values
+
+        # Debug: Affichez les valeurs SHAP après la conversion
+        print("Valeurs SHAP après conversion:", shap_values_json)
 
         response = {
             "probabilities": predicted_proba.tolist(),
@@ -50,7 +52,9 @@ def predict_proba_shap():
         }
         return jsonify(response)
     except Exception as e:
+        print("Erreur:", e)
         return jsonify({"error": str(e)})
+
 
 
 @app.route('/health', methods=['GET'])
