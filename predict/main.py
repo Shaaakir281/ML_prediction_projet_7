@@ -27,7 +27,7 @@ def predict_class():
         return jsonify(predictions.tolist())
     except Exception as e:
         return jsonify({"error": str(e)})
-
+    
 @app.route('/predict_proba_shap', methods=['POST'])
 def predict_proba_shap():
     try:
@@ -36,14 +36,8 @@ def predict_proba_shap():
         predicted_proba = model_sans_threshold.predict_proba(data)[:, 1]
         shap_values = explainer.shap_values(data)
 
-        # Debug: Affichez les valeurs SHAP avant la conversion
-        print("Valeurs SHAP avant conversion:", shap_values)
-
-        # Conversion des valeurs SHAP
-        shap_values_json = shap_values.tolist() if isinstance(shap_values, np.ndarray) else shap_values
-
-        # Debug: Affichez les valeurs SHAP après la conversion
-        print("Valeurs SHAP après conversion:", shap_values_json)
+        # Convertir les valeurs SHAP en listes pour chaque classe
+        shap_values_json = [s.tolist() for s in shap_values]
 
         response = {
             "probabilities": predicted_proba.tolist(),
@@ -52,10 +46,7 @@ def predict_proba_shap():
         }
         return jsonify(response)
     except Exception as e:
-        print("Erreur:", e)
         return jsonify({"error": str(e)})
-
-
 
 @app.route('/health', methods=['GET'])
 def health_check():
