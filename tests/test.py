@@ -28,7 +28,7 @@ class FlaskApiTest(unittest.TestCase):
         json_data = self.test_data.sample(500, random_state=42).to_json(orient='records')
         response = self.app.post('/predict_class', data=json_data, content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        response_data = response.get_json()
+        response_data = response.get_json
         # Vérification et calcul des métriques
         if 'predictions' in response_data:
             y_pred = response_data['predictions']
