@@ -9,7 +9,7 @@ flavors:
     python_model: python_model.pkl
     python_version: 3.9.18
 mlflow_version: 2.9.2
-model_size_bytes: 3550308
-model_uuid: 5031b747741a4e2ba2c5706b03f4b4ac
-run_id: b8b16490de224bf7bc2c3701a994af26
-utc_time_created: '2023-12-30 08:38:11.834245'
+model_size_bytes: 2810673
+model_uuid: 599faf8fd2b441378b5ba992a2be979e
+run_id: a8c6e1642909482bba130a567f80d00f
+utc_time_created: '2024-01-14 15:18:07.997679'
